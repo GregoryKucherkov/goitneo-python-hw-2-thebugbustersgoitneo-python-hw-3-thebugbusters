@@ -40,8 +40,11 @@ def show_all(contacts):
             print(f"{name}: {phone}")
 
 def print_supported_commands():
-    print(f"To add contact use command 'Add'.
-          to   ")
+    print(f"To add a contact, use command 'Add'.\n"
+      f"To end assistant, use command 'Close'.\n"
+      f"To change contact, use command 'Change'.\n"
+      f"To see a phone and a name, use command 'phone name'.\n"
+      f"To see all saved names and phones, use command 'All'.")
 
 def main():
     contacts = {}
