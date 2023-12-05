@@ -3,8 +3,6 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
-
-
 def add_contact(contacts, args):
     if len(args) < 2:
         return "Contact was not added. The contact must be: <name phone number>"
@@ -22,7 +20,7 @@ def verify_contact(contacts, args):
 
 def change_contact(contacts, args):
     if len(args) < 2:
-        return f"To change the contact input existing name and new phone. "
+        return f"To change the contact provide the existing name and a new phone. "
     if not verify_contact(contacts, args):
         return f"There is no such contact! To add contact use command 'Add'."
     name, phone = args
@@ -33,7 +31,6 @@ def show_phone(contacts, name):
     if name not in contacts:
         return "There is no such contact"
     return f"{name}: {contacts[name]}"
-        
     
 def show_all(contacts):
     if not contacts:
