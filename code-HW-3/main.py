@@ -5,7 +5,6 @@ from addressbook import Record
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
-    print(f'parser->>> {cmd} - {args}')
     return cmd, *args
 
 def input_error(func):
@@ -51,7 +50,7 @@ def show_phone(book, name):
 def show_birthday(book, name):
     if name not in book.data:
         return "There is no such contact"
-    return f"{name}: {book.data[name]['birthday']}" 
+    return f"{name}: {book.data[name].birthday}" 
   
 def show_all(book):     
     if not book:
@@ -63,10 +62,11 @@ def show_all(book):
             print(f"{name}: {phones}, Birthday {birthday}.")
 
 def print_supported_commands():
-    print(f"To add a phone number, use command 'Add phone <name> <phone>'.\n"
+    print(f"To add a phone number, use command 'Add-phone <name> <phone>'.\n"
       f"To end assistant, use command 'Close'.\n"
-      f"To change contact, use command 'Change name new_phone. '.\n"
-      f"To see a phone and a name, use command 'phone name'.\n"
+      f"To change contact, use command 'Change <name> <new phone>. '.\n"
+      f"To see a phone and a name, use command 'phone-name'.\n"
+      f"To add birthday, use command 'add-birthday <name> <DD-MM-YYYY>'.\n"
       f"To see all saved names and phones, use command 'All'.")
     
 def main():
@@ -94,18 +94,12 @@ def main():
                 print(add_contact(book, args))    
         elif command in ["change", "change-contact"]:
             print(change_contact(book, args))
-
-
-
         elif command == "show-birthday" and args[0]:
             print(show_birthday(book, args[0]))
 
         elif command == "birthdays":
-            book.get_birthdays_per_week()   #?
-
-            # for day, names in birthdays_per_day.items():
-      #  print(f"{day}: {', '.join(names)}")  ??
-
+            print(book.get_birthdays_per_week())   
+            
         elif command == "add-birthday":
             while True:
                 if len(args) < 2:
@@ -119,15 +113,9 @@ def main():
                     else:
                         new_record = Record(name)
                         print(new_record.add_birthday(name, birthday))
-                        book.add_record(name, new_record)
+                        book.add_record(name, birthday=new_record)
                     break
-            
-        
-                  
-            
-
-        
-
+                     
         elif command == "phone" and args[0]:
             print(show_phone(book, args[0]))
         elif command in ["all", "everybody"]:

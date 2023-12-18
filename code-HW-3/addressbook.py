@@ -28,7 +28,6 @@ class Phone(Field):
 class Record:
     
     def __init__(self, name):
-        print(f"--->>>>>in the record")
         self.name = Name(name)
         self.phones = []
         self.birthday = None
@@ -38,10 +37,10 @@ class Record:
         self.phones.append(number)
 
     def add_birthday(self, name, birthday):
-        print(f"birthday->> {name}, {birthday}")
         if self.birthday is None:
+            if isinstance(birthday, Record):
+                birthday = birthday.birthday
             if name and self.is_valid_birthday(birthday):
-                print(f"self.brth ->> {birthday}")
                 self.birthday = birthday
                 return f"Birthday added for {name}"
             else:
@@ -82,12 +81,11 @@ class Record:
 
 class AddressBook(UserDict):
     
-    def add_record(self, name, phone, birthday=None):
+    def add_record(self, name, phone=None, birthday=None):
         if name not in self.data:
-            print(f"add-record->>>")
             record = Record(name)
-            record.add_phone(phone) 
-            #print 
+            if phone:
+                record.add_phone(phone) 
             if birthday:
                 record.add_birthday(name, birthday)
             self.data[name] = record
@@ -123,24 +121,27 @@ class AddressBook(UserDict):
         )
 
         for name in self.data.values():
-            name = name["name"]
-            birthday = name["birthday"].date()  # date type conversion
-            birthday_this_year = birthday.replace(year=today.year) 
+            if name.birthday:
+                name = name.name
+                birthday = [name].birthday.date()  # date type conversion
+                birthday_this_year = birthday.replace(year=today.year) 
          
-            delta_days = (birthday_this_year - today).days
+                delta_days = (birthday_this_year - today).days
 
-            if delta_days <= 7:
-                day = week[birthday.weekday()]
-                if birthday.weekday() >= 5: 
-                    birthdays_per_day['Monday'].append(name)
-                else:
-                    birthdays_per_day[day].append(name)    
+                if delta_days <= 7:
+                    day = week[birthday.weekday()]
+                    if birthday.weekday() >= 5: 
+                        birthdays_per_day['Monday'].append(name)
+                    else:
+                        birthdays_per_day[day].append(name)    
             
-            elif birthday_this_year < today:
-                birthday_this_year = birthday.replace(year=today.year + 1)
+                elif birthday_this_year < today:
+                    birthday_this_year = birthday.replace(year=today.year + 1)
 
-            if birthday.weekday() == 5 or birthday.weekday() == 6:
-                pass
+                if birthday.weekday() == 5 or birthday.weekday() == 6:
+                    pass
+            else:
+                print(f"There is no Birthday for such contact.")
 
         for day, names in birthdays_per_day.items():
             print(f"{day}: {', '.join(names)}")
